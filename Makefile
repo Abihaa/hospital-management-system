@@ -2,8 +2,8 @@
 format:
 	./scripts/format.sh
 
-check:
+check: format
 	./scripts/check.sh
 
-test:
+test: check
 	./scripts/test.sh
