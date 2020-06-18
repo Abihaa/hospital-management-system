@@ -7,3 +7,4 @@ check: format
 
 test: check
 	${DOCKRUN} bash ./scripts/test.sh
+

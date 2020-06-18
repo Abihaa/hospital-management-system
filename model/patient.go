@@ -4,6 +4,7 @@ import (
 	"github.com/fatih/structs"
 )
 
+
 // Patient details.
 type Patient struct {
 	ID        int    `json:"id" structs:"id"`
@@ -13,6 +14,7 @@ type Patient struct {
 	Phone     string `json:"phone" structs:"phone"`
 	Condition string `json:"condition" structs:"condition"`
 }
+
 
 // Map converts struct to Map.
 func (p *Patient) Map() map[string]interface{} {
