@@ -1,0 +1,12 @@
+FROM golang:1.14
+
+# Set the Current Working Directory inside the container
+WORKDIR /go/src/github.com/Abihaa/hospital-management-system/app
+
+#
+ENV GO111MODULE=on
+
+
+# Installs golanci-lint && goimports
+RUN go get github.com/golangci/golangci-lint/cmd/golangci-lint \
+&& go get golang.org/x/tools/cmd/goimports
