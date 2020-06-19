@@ -1,0 +1,16 @@
+FROM golang:1.14
+
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+gettext-base \
+&& rm -rf /var/lib/apt/lists/*
+
+# Set the Current Working Directory inside the container
+WORKDIR /hospital-management-system/src/github.com/Abihaa/hospital-management-system
+
+#
+ENV GO111MODULE=on
+
+# Installs golanci-lint && goimports
+RUN go get github.com/golangci/golangci-lint/cmd/golangci-lint \
+&& go get golang.org/x/tools/cmd/goimports

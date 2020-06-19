@@ -4,6 +4,7 @@ import (
 	"github.com/fatih/structs"
 )
 
+// Patient details.
 type Patient struct {
 	ID        int    `json:"id" structs:"id"`
 	Name      string `json:"name" structs:"name"`
@@ -13,12 +14,13 @@ type Patient struct {
 	Condition string `json:"condition" structs:"condition"`
 }
 
+// Map conversion.
 func (p *Patient) Map() map[string]interface{} {
 	return structs.Map(p)
 }
 
+// Names returns a slice of field names.
 func (p *Patient) Names() []string {
-
 	fields := structs.Fields(p)
 	names := make([]string, len(fields))
 
