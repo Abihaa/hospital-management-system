@@ -1,6 +1,7 @@
-language: go
+language: generic
 
-go:
-  - "1.14"
+services:
+  - docker
 
-script: make test
+script:
+  - make test
