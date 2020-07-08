@@ -130,7 +130,6 @@ linters:
   #   - govet
   enable-all: true
   disable:
-    - gas
     - lll
     - scopelint
     - gochecknoglobals
@@ -142,6 +141,9 @@ linters:
     - errcheck
     - funlen
     - testpackage
+    - goerr113
+    - gosec
+    - gofumpt
 
   # disable-all: false
   # presets:

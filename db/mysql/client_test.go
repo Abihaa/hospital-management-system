@@ -1,0 +1,192 @@
+package mysql
+
+import (
+	"os"
+	"reflect"
+	"testing"
+
+	"github.com/abihaa/hospital-management-system/db"
+	"github.com/abihaa/hospital-management-system/model"
+	"github.com/google/go-cmp/cmp"
+)
+
+func Test_client_GetPatientByID(t *testing.T) {
+	_ = os.Setenv("DB_PORT", "3306")
+	_ = os.Setenv("DB_HOST", "HMS-mysql-db")
+	_ = os.Setenv("DB_USER", "root")
+
+	c, _ := NewClient(db.Option{})
+	patient := &model.Patient{Name: "Ertugrl", Age: 50, Gender: "Male", Phone: "0321:2233445", Conditions: "Moderate"}
+	_, _ = c.SavePatient(patient)
+
+	type args struct {
+		id string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    *model.Patient
+		wantErr bool
+	}{
+		{
+			name:    "successful in getting patient details",
+			args:    args{id: patient.ID},
+			want:    patient,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := c.GetPatientByID(tt.args.id)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetPatientByID() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetPatientByID() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_client_ListPatient(t *testing.T) {
+	_ = os.Setenv("DB_PORT", "3306")
+	_ = os.Setenv("DB_HOST", "HMS-mysql-db")
+	_ = os.Setenv("DB_USER", "root")
+
+	c, _ := NewClient(db.Option{})
+	patient := &model.Patient{Name: "Suleman shah", Age: 70, Gender: "Male", Phone: "0333-4455212", Conditions: "Out of Danger"}
+	_, _ = c.SavePatient(patient)
+
+	type args struct {
+		filter map[string]interface{}
+		limit  int64
+		offset int64
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    []*model.Patient
+		wantErr bool
+	}{
+		{
+			name:    "successful: listing with name filter.",
+			args:    args{filter: map[string]interface{}{"name": "Suleman shah"}, limit: 1, offset: 0},
+			want:    []*model.Patient{patient},
+			wantErr: false,
+		},
+		{
+			name:    "successful: listing with age filter",
+			args:    args{filter: map[string]interface{}{"age": "70"}, limit: 1, offset: 0},
+			want:    []*model.Patient{patient},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := c.ListPatient(tt.args.filter, tt.args.limit, tt.args.offset)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ListPatient() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if diff := cmp.Diff(got, tt.want); diff != "" {
+				t.Errorf("ListPatient() got = %v, want = %v,diff = %s", got, tt.want, diff)
+			}
+		})
+	}
+}
+
+func Test_client_RemovePatient(t *testing.T) {
+	_ = os.Setenv("DB_PORT", "3306")
+	_ = os.Setenv("DB_HOST", "HMS-mysql-db")
+	_ = os.Setenv("DB_USER", "root")
+
+	c, _ := NewClient(db.Option{})
+	patient := &model.Patient{Name: "Titus", Age: 45, Gender: "Male", Phone: "0321:5544332", Conditions: "Critical"}
+	_, _ = c.SavePatient(patient)
+	type args struct {
+		id string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name:    "successful in removing Patient.",
+			args:    args{id: patient.ID},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := c.RemovePatient(tt.args.id); (err != nil) != tt.wantErr {
+				t.Errorf("RemovePatient() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func Test_client_SavePatient(t *testing.T) {
+	_ = os.Setenv("DB_PORT", "3306")
+	_ = os.Setenv("DB_HOST", "HMS-mysql-db")
+	_ = os.Setenv("DB_USER", "root")
+
+	type args struct {
+		patient *model.Patient
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name:    " successful in Adding new Patient.",
+			args:    args{patient: &model.Patient{Name: "Turgut", Age: 45, Gender: "Male", Phone: "0312-3245532", Conditions: "Critical"}},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, _ := NewClient(db.Option{})
+			_, err := c.SavePatient(tt.args.patient)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("SavePatient() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+		})
+	}
+}
+
+func Test_client_UpdatePatient(t *testing.T) {
+	_ = os.Setenv("DB_PORT", "3306")
+	_ = os.Setenv("DB_HOST", "HMS-mysql-db")
+	_ = os.Setenv("DB_USER", "root")
+
+	c, _ := NewClient(db.Option{})
+	patient := &model.Patient{Name: "Halime", Age: 35, Gender: "Female", Phone: "0321:5532643", Conditions: "moderate"}
+	_, _ = c.SavePatient(patient)
+
+	type args struct {
+		id      string
+		patient *model.Patient
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name:    "successful in Updating Patient.",
+			args:    args{id: patient.ID, patient: &model.Patient{Name: "Halime", Age: 36, Gender: "Female", Phone: "0321:5532643", Conditions: "moderate"}},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := c.UpdatePatient(tt.args.id, tt.args.patient); (err != nil) != tt.wantErr {
+				t.Errorf("UpdatePatient() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}

@@ -1,5 +1,6 @@
 FROM golang:1.14
 
+ENV GO111MODULE=on
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
 gettext-base \
@@ -8,7 +9,7 @@ gettext-base \
 # Set the Current Working Directory inside the container
 WORKDIR /hospital-management-system/src/github.com/Abihaa/hospital-management-system
 
-#
+# goModules
 ENV GO111MODULE=on
 
 # Installs golanci-lint && goimports
