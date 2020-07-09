@@ -6,12 +6,12 @@ import (
 
 // Patient details.
 type Patient struct {
-	ID        int    `json:"id" structs:"id"`
-	Name      string `json:"name" structs:"name"`
-	Age       int    `json:"age" structs:"age"`
-	Gender    string `json:"gender" structs:"gender"`
-	Phone     string `json:"phone" structs:"phone"`
-	Condition string `json:"condition" structs:"condition"`
+	ID         string `json:"id" structs:"id" db:"id" bson:"_id"`
+	Name       string `json:"name" structs:"name" db:"name" bson:"name"`
+	Age        int    `json:"age" structs:"age" db:"age" bson:"age"`
+	Gender     string `json:"gender" structs:"gender" db:"gender" bson:"gender"`
+	Phone      string `json:"phone" structs:"phone" db:"phone" bson:"phone"`
+	Conditions string `json:"conditions" structs:"conditions" db:"conditions" bson:"conditions"`
 }
 
 // Map conversion.
