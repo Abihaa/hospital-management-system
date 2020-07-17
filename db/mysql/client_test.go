@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/abihaa/hospital-management-system/db"
-	"github.com/abihaa/hospital-management-system/model"
+	"github.com/abihaa/hospital-management-system/models"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -16,7 +16,7 @@ func Test_client_GetPatientByID(t *testing.T) {
 	_ = os.Setenv("DB_USER", "root")
 
 	c, _ := NewClient(db.Option{})
-	patient := &model.Patient{Name: "Ertugrl", Age: 50, Gender: "Male", Phone: "0321:2233445", Conditions: "Moderate"}
+	patient := &models.Patient{Name: "Ertugrl", Age: 50, Gender: "Male", Phone: "0321:2233445", Conditions: "Moderate"}
 	_, _ = c.SavePatient(patient)
 
 	type args struct {
@@ -25,7 +25,7 @@ func Test_client_GetPatientByID(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *model.Patient
+		want    *models.Patient
 		wantErr bool
 	}{
 		{
@@ -55,7 +55,7 @@ func Test_client_ListPatient(t *testing.T) {
 	_ = os.Setenv("DB_USER", "root")
 
 	c, _ := NewClient(db.Option{})
-	patient := &model.Patient{Name: "Suleman shah", Age: 70, Gender: "Male", Phone: "0333-4455212", Conditions: "Out of Danger"}
+	patient := &models.Patient{Name: "Suleman shah", Age: 70, Gender: "Male", Phone: "0333-4455212", Conditions: "Out of Danger"}
 	_, _ = c.SavePatient(patient)
 
 	type args struct {
@@ -66,19 +66,19 @@ func Test_client_ListPatient(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    []*model.Patient
+		want    []*models.Patient
 		wantErr bool
 	}{
 		{
 			name:    "successful: listing with name filter.",
 			args:    args{filter: map[string]interface{}{"name": "Suleman shah"}, limit: 1, offset: 0},
-			want:    []*model.Patient{patient},
+			want:    []*models.Patient{patient},
 			wantErr: false,
 		},
 		{
 			name:    "successful: listing with age filter",
 			args:    args{filter: map[string]interface{}{"age": "70"}, limit: 1, offset: 0},
-			want:    []*model.Patient{patient},
+			want:    []*models.Patient{patient},
 			wantErr: false,
 		},
 	}
@@ -102,7 +102,7 @@ func Test_client_RemovePatient(t *testing.T) {
 	_ = os.Setenv("DB_USER", "root")
 
 	c, _ := NewClient(db.Option{})
-	patient := &model.Patient{Name: "Titus", Age: 45, Gender: "Male", Phone: "0321:5544332", Conditions: "Critical"}
+	patient := &models.Patient{Name: "Titus", Age: 45, Gender: "Male", Phone: "0321:5544332", Conditions: "Critical"}
 	_, _ = c.SavePatient(patient)
 	type args struct {
 		id string
@@ -133,7 +133,7 @@ func Test_client_SavePatient(t *testing.T) {
 	_ = os.Setenv("DB_USER", "root")
 
 	type args struct {
-		patient *model.Patient
+		patient *models.Patient
 	}
 	tests := []struct {
 		name    string
@@ -142,7 +142,7 @@ func Test_client_SavePatient(t *testing.T) {
 	}{
 		{
 			name:    " successful in Adding new Patient.",
-			args:    args{patient: &model.Patient{Name: "Turgut", Age: 45, Gender: "Male", Phone: "0312-3245532", Conditions: "Critical"}},
+			args:    args{patient: &models.Patient{Name: "Turgut", Age: 45, Gender: "Male", Phone: "0312-3245532", Conditions: "Critical"}},
 			wantErr: false,
 		},
 	}
@@ -164,12 +164,12 @@ func Test_client_UpdatePatient(t *testing.T) {
 	_ = os.Setenv("DB_USER", "root")
 
 	c, _ := NewClient(db.Option{})
-	patient := &model.Patient{Name: "Halime", Age: 35, Gender: "Female", Phone: "0321:5532643", Conditions: "moderate"}
+	patient := &models.Patient{Name: "Halime", Age: 35, Gender: "Female", Phone: "0321:5532643", Conditions: "moderate"}
 	_, _ = c.SavePatient(patient)
 
 	type args struct {
 		id      string
-		patient *model.Patient
+		patient *models.Patient
 	}
 	tests := []struct {
 		name    string
@@ -178,7 +178,7 @@ func Test_client_UpdatePatient(t *testing.T) {
 	}{
 		{
 			name:    "successful in Updating Patient.",
-			args:    args{id: patient.ID, patient: &model.Patient{Name: "Halime", Age: 36, Gender: "Female", Phone: "0321:5532643", Conditions: "moderate"}},
+			args:    args{id: patient.ID, patient: &models.Patient{Name: "Halime", Age: 36, Gender: "Female", Phone: "0321:5532643", Conditions: "moderate"}},
 			wantErr: false,
 		},
 	}

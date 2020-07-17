@@ -3,16 +3,16 @@ package db
 import (
 	"log"
 
-	"github.com/abihaa/hospital-management-system/model"
+	"github.com/abihaa/hospital-management-system/models"
 )
 
 // DataStore is an interface for query ops.
 type DataStore interface {
-	SavePatient(patient *model.Patient) (string, error)
-	GetPatientByID(id string) (*model.Patient, error)
+	SavePatient(patient *models.Patient) (string, error)
+	GetPatientByID(id string) (*models.Patient, error)
 	RemovePatient(id string) error
-	UpdatePatient(id string, patient *model.Patient) error
-	ListPatient(filter map[string]interface{}, limit int64, offset int64) ([]*model.Patient, error)
+	UpdatePatient(id string, patient *models.Patient) error
+	ListPatient(filter map[string]interface{}, limit int64, offset int64) ([]*models.Patient, error)
 }
 
 // Option holds configuration for data store clients.
