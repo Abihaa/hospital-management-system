@@ -14,7 +14,7 @@ import (
 	"github.com/abihaa/hospital-management-system/config"
 	"github.com/abihaa/hospital-management-system/db"
 	domainErr "github.com/abihaa/hospital-management-system/errors"
-	"github.com/abihaa/hospital-management-system/model"
+	"github.com/abihaa/hospital-management-system/models"
 )
 
 const (
@@ -52,7 +52,7 @@ func NewClient(conf db.Option) (db.DataStore, error) {
 }
 
 // To add  patient details.
-func (c *client) SavePatient(patient *model.Patient) (string, error) {
+func (c *client) SavePatient(patient *models.Patient) (string, error) {
 	if patient.ID != "" {
 		err := c.UpdatePatient(patient.ID, patient)
 		return patient.ID, err
@@ -70,7 +70,7 @@ func (c *client) SavePatient(patient *model.Patient) (string, error) {
 }
 
 // update patient details.
-func (c *client) UpdatePatient(id string, patient *model.Patient) error {
+func (c *client) UpdatePatient(id string, patient *models.Patient) error {
 	if _, err := c.db.NamedExec(fmt.Sprintf(`UPDATE %s SET %s WHERE id = '%s'`, patientTableName, strings.Join(mkPlaceHolder(patient.Names(), "=:", func(name, prefix string) string {
 		return name + prefix + name
 	}), ","), id), patient); err != nil {
@@ -80,8 +80,8 @@ func (c *client) UpdatePatient(id string, patient *model.Patient) error {
 }
 
 // To retrieve patient data by ID.
-func (c *client) GetPatientByID(id string) (*model.Patient, error) {
-	var pat model.Patient
+func (c *client) GetPatientByID(id string) (*models.Patient, error) {
+	var pat models.Patient
 	if err := c.db.Get(&pat, fmt.Sprintf(`SELECT * FROM %s WHERE id = '%s'`, patientTableName, id)); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, domainErr.NewAPIError(domainErr.NotFound, err)
@@ -101,8 +101,8 @@ func (c *client) RemovePatient(id string) error {
 }
 
 // To list all available patient details.
-func (c *client) ListPatient(filter map[string]interface{}, limit int64, offset int64) ([]*model.Patient, error) {
-	var pat []*model.Patient
+func (c *client) ListPatient(filter map[string]interface{}, limit int64, offset int64) ([]*models.Patient, error) {
+	var pat []*models.Patient
 
 	if err := c.db.Select(&pat, fmt.Sprintf("SELECT * FROM %s %s LIMIT %b, %b", patientTableName, mkFilter(filter), offset, limit)); err != nil {
 		if err == sql.ErrNoRows {

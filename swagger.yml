@@ -1,0 +1,153 @@
+---
+swagger: "2.0"
+info:
+  description: "Hospital Management System"
+  version: "0.0.1"
+  title: "HMS"
+host: "localhost:8080"
+basePath: "/"
+schemes:
+  - "http"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+  /patient:
+    post:
+      operationId: "savePatient"
+      parameters:
+        - in: "body"
+          name: "patient"
+          description: "patients details"
+          required: false
+          schema:
+            $ref: "#/definitions/Patient"
+      responses:
+        201:
+          description: "patient added"
+          schema:
+            $ref: "#/definitions/Patient"
+        409:
+          description: "patient already exists"
+        500:
+          description: "internal server error"
+
+    get:
+      operationId: "listPatient"
+      parameters:
+        - in: "query"
+          name: "name"
+          type: "string"
+          description: "name of patient"
+        - in: "query"
+          name: "age"
+          type: "integer"
+          description: "name of patient"
+        - in: "query"
+          name: "gender"
+          type: "string"
+          description: "name of patient"
+        - in: "query"
+          name: "phone"
+          type: "string"
+          description: "name of patient"
+        - in: "query"
+          name: "conditions"
+          type: "string"
+          description: "name of patient"
+        - in: "query"
+          name: "offset"
+          type: "integer"
+          description: "The number of items to skip before starting to collect the result set"
+        - in: "query"
+          name: "limit"
+          type: "integer"
+          description: "The numbers of items to return"
+      description: "return patients records based on filters"
+      responses:
+        200:
+          description: "patient found"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Patient"
+        404:
+          description: "patient not found"
+        500:
+          description: "internal server error"
+
+  /patient/{ID}:
+    get:
+      operationId: "getPatient"
+      parameters:
+        - in: "path"
+          type: "string"
+          name: "ID"
+          required: true
+          description: "UUID of the patient"
+      description: "return patient based on UUID"
+      responses:
+        200:
+          description: "patient found"
+          schema:
+            $ref: "#/definitions/Patient"
+        404:
+          description: "patient not found"
+        500:
+          description: "internal server error"
+
+    put:
+      operationId: "updatePatient"
+      parameters:
+        - in: "path"
+          type: "string"
+          name: "ID"
+          required: true
+          description: "UUID of the patient"
+        - in: "body"
+          name: "patient"
+          description: "patients details"
+          required: false
+          schema:
+            $ref: "#/definitions/Patient"
+      responses:
+        200:
+          description: "patient updated"
+          schema:
+            $ref: "#/definitions/Patient"
+        500:
+          description: "internal server error"
+
+    delete:
+      operationId: "removePatient"
+      parameters:
+        - in: "path"
+          name: "ID"
+          type: "string"
+          description: "UUID of the patient"
+          required: true
+      responses:
+        204:
+          description: "patient removed"
+        404:
+          description: "patient not found"
+        500:
+          description: "internal server error"
+
+definitions:
+  Patient:
+    type: "object"
+    properties:
+      ID:
+        type: "string"
+      Name:
+        type: "string"
+      Age:
+        type: "integer"
+      Gender:
+        type: "string"
+      Phone:
+        type: "string"
+      Conditions:
+        type: "string"

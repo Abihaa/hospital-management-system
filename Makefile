@@ -6,7 +6,7 @@ local: | quiet
 	@$(eval DOCKRUN= )
 	@mkdir -p tmp
 	@touch tmp/dev_image_id
-quiet: # this is silly but shuts up 'Nothing to be done for `local`'
+quiet:
 	@:
 
 prepare: tmp/dev_image_id
@@ -21,6 +21,9 @@ format: prepare
 
 check: prepare format
 	${DOCKRUN} bash ./scripts/check.sh
+
+todo:
+	${DOCKRUN} bash ./scripts/todo.sh
 
 test: check db_prepare
 	${DOCKTEST} bash ./scripts/test.sh
@@ -37,3 +40,6 @@ db_prepare: db_start
 
 db_stop:
 	bash ./scripts/db_stop.sh
+
+codegen: prepare
+	${DOCKRUN} bash ./scripts/swagger.sh

@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/abihaa/hospital-management-system/db"
-	"github.com/abihaa/hospital-management-system/model"
+	"github.com/abihaa/hospital-management-system/models"
 	"github.com/google/go-cmp/cmp"
 )
 
@@ -15,7 +15,7 @@ func Test_client_GetPatientByID(t *testing.T) {
 	_ = os.Setenv("DB_HOST", "HMS-mongo-db")
 
 	c, _ := NewClient(db.Option{})
-	patient := &model.Patient{Name: "Ertugrl", Age: 50, Gender: "Male", Phone: "0321:2233445", Conditions: "Moderate"}
+	patient := &models.Patient{Name: "Ertugrl", Age: 50, Gender: "Male", Phone: "0321:2233445", Conditions: "Moderate"}
 	_, _ = c.SavePatient(patient)
 
 	type args struct {
@@ -24,7 +24,7 @@ func Test_client_GetPatientByID(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *model.Patient
+		want    *models.Patient
 		wantErr bool
 	}{
 		{
@@ -53,9 +53,9 @@ func Test_client_ListPatient(t *testing.T) {
 	_ = os.Setenv("DB_HOST", "HMS-mongo-db")
 
 	c, _ := NewClient(db.Option{})
-	patient1 := &model.Patient{Name: "Turali", Age: 7, Gender: "Male", Phone: "021-1123456", Conditions: "Moderate"}
+	patient1 := &models.Patient{Name: "Turali", Age: 7, Gender: "Male", Phone: "021-1123456", Conditions: "Moderate"}
 	_, _ = c.SavePatient(patient1)
-	patient2 := &model.Patient{Name: "Dundar", Age: 15, Gender: "Male", Phone: "0900-78601", Conditions: "Moderate"}
+	patient2 := &models.Patient{Name: "Dundar", Age: 15, Gender: "Male", Phone: "0900-78601", Conditions: "Moderate"}
 	_, _ = c.SavePatient(patient2)
 
 	type args struct {
@@ -66,19 +66,19 @@ func Test_client_ListPatient(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    []*model.Patient
+		want    []*models.Patient
 		wantErr bool
 	}{
 		{
 			name:    "successful: listing with name filter.",
 			args:    args{filter: map[string]interface{}{"name": "Turali"}, limit: 1, offset: 0},
-			want:    []*model.Patient{patient1},
+			want:    []*models.Patient{patient1},
 			wantErr: false,
 		},
 		{
 			name:    "successful: listing with age filter.",
 			args:    args{filter: map[string]interface{}{"age": 15}, limit: 1, offset: 0},
-			want:    []*model.Patient{patient2},
+			want:    []*models.Patient{patient2},
 			wantErr: false,
 		},
 	}
@@ -101,7 +101,7 @@ func Test_client_RemovePatient(t *testing.T) {
 	_ = os.Setenv("DB_HOST", "HMS-mongo-db")
 
 	c, _ := NewClient(db.Option{})
-	patient := &model.Patient{Name: "Titus", Age: 45, Gender: "Male", Phone: "0321:5544332", Conditions: "Critical"}
+	patient := &models.Patient{Name: "Titus", Age: 45, Gender: "Male", Phone: "0321:5544332", Conditions: "Critical"}
 	_, _ = c.SavePatient(patient)
 	type args struct {
 		id string
@@ -131,7 +131,7 @@ func Test_client_SavePatient(t *testing.T) {
 	_ = os.Setenv("DB_HOST", "HMS-mongo-db")
 
 	type args struct {
-		patient *model.Patient
+		patient *models.Patient
 	}
 	tests := []struct {
 		name    string
@@ -140,7 +140,7 @@ func Test_client_SavePatient(t *testing.T) {
 	}{
 		{
 			name:    " successful in Adding new Patient.",
-			args:    args{patient: &model.Patient{Name: "Turgut", Age: 45, Gender: "Male", Phone: "0312-3245532", Conditions: "Critical"}},
+			args:    args{patient: &models.Patient{Name: "Turgut", Age: 45, Gender: "Male", Phone: "0312-3245532", Conditions: "Critical"}},
 			wantErr: false,
 		},
 	}
@@ -161,12 +161,12 @@ func Test_client_UpdatePatient(t *testing.T) {
 	_ = os.Setenv("DB_HOST", "HMS-mongo-db")
 
 	c, _ := NewClient(db.Option{})
-	patient := &model.Patient{Name: "Halime", Age: 35, Gender: "Female", Phone: "0321:5532643", Conditions: "moderate"}
+	patient := &models.Patient{Name: "Halime", Age: 35, Gender: "Female", Phone: "0321:5532643", Conditions: "moderate"}
 	_, _ = c.SavePatient(patient)
 
 	type args struct {
 		id      string
-		patient *model.Patient
+		patient *models.Patient
 	}
 	tests := []struct {
 		name    string
@@ -175,7 +175,7 @@ func Test_client_UpdatePatient(t *testing.T) {
 	}{
 		{
 			name:    "successful in Updating Patient.",
-			args:    args{id: patient.ID, patient: &model.Patient{ID: patient.ID, Name: "Halime", Age: 36, Gender: "Female", Phone: "0321:5532643", Conditions: "moderate"}},
+			args:    args{id: patient.ID, patient: &models.Patient{ID: patient.ID, Name: "Halime", Age: 36, Gender: "Female", Phone: "0321:5532643", Conditions: "moderate"}},
 			wantErr: false,
 		},
 	}

@@ -14,7 +14,7 @@ import (
 	"github.com/abihaa/hospital-management-system/config"
 	"github.com/abihaa/hospital-management-system/db"
 	domainErr "github.com/abihaa/hospital-management-system/errors"
-	"github.com/abihaa/hospital-management-system/model"
+	"github.com/abihaa/hospital-management-system/models"
 )
 
 const (
@@ -41,7 +41,7 @@ func NewClient(conf db.Option) (db.DataStore, error) {
 	return &client{conn: cli}, nil
 }
 
-func (c *client) SavePatient(patient *model.Patient) (string, error) {
+func (c *client) SavePatient(patient *models.Patient) (string, error) {
 	// if patient exists, this updates its record.
 	if patient.ID != "" {
 		err := c.UpdatePatient(patient.ID, patient)
@@ -58,8 +58,8 @@ func (c *client) SavePatient(patient *model.Patient) (string, error) {
 	return patient.ID, nil
 }
 
-func (c *client) GetPatientByID(id string) (*model.Patient, error) {
-	var pat *model.Patient
+func (c *client) GetPatientByID(id string) (*models.Patient, error) {
+	var pat *models.Patient
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(patCollection)
 	if err := collection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&pat); err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
@@ -79,7 +79,7 @@ func (c *client) RemovePatient(id string) error {
 	return nil
 }
 
-func (c *client) UpdatePatient(id string, patient *model.Patient) error {
+func (c *client) UpdatePatient(id string, patient *models.Patient) error {
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(patCollection)
 	if _, err := collection.UpdateOne(context.TODO(), bson.M{"_id": patient.ID}, bson.M{"$set": patient}); err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to update patient '%s'", id))
@@ -88,8 +88,8 @@ func (c *client) UpdatePatient(id string, patient *model.Patient) error {
 	return nil
 }
 
-func (c *client) ListPatient(filter map[string]interface{}, limit int64, offset int64) ([]*model.Patient, error) {
-	var pat []*model.Patient
+func (c *client) ListPatient(filter map[string]interface{}, limit int64, offset int64) ([]*models.Patient, error) {
+	var pat []*models.Patient
 
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(patCollection)
 	cursor, err := collection.Find(context.TODO(), filter, &options.FindOptions{
@@ -103,7 +103,7 @@ func (c *client) ListPatient(filter map[string]interface{}, limit int64, offset 
 		return nil, err
 	}
 	for cursor.Next(context.TODO()) {
-		var p *model.Patient
+		var p *models.Patient
 		err = cursor.Decode(&p)
 		if err != nil {
 			return nil, errors.Wrap(err, "Error occurred while scanning rows")

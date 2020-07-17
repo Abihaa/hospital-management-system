@@ -9,8 +9,13 @@ gettext-base \
 # Set the Current Working Directory inside the container
 WORKDIR /hospital-management-system/src/github.com/Abihaa/hospital-management-system
 
-# goModules
-ENV GO111MODULE=on
+RUN apt-get -y update && apt-get -y install jq curl
+
+# Install go-swagger
+RUN download_url=$(curl -s https://api.github.com/repos/go-swagger/go-swagger/releases/latest | \
+      jq -r '.assets[] | select(.name | contains("'"$(uname | tr '[:upper:]' '[:lower:]')"'_amd64")) | .browser_download_url') \
+      && curl -o /usr/local/bin/swagger -L'#' "$download_url" \
+      && chmod +x /usr/local/bin/swagger
 
 # Installs golanci-lint && goimports
 RUN go get github.com/golangci/golangci-lint/cmd/golangci-lint \
